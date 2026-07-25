@@ -6,9 +6,9 @@ function DashboardCard({ title, value, icon }) {
           {title}
         </h3>
 
-        <span className="text-xl">
+        <div className="text-slate-600">
           {icon}
-        </span>
+        </div>
       </div>
 
       <p className="mt-3 text-3xl font-bold text-gray-800">

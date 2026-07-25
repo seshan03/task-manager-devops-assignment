@@ -2,6 +2,12 @@ import DashboardCard from "../components/DashboardCard";
 import LectureCard from "../components/LectureCard";
 import AssignmentCard from "../components/AssignmentCard";
 
+import {
+  CalendarDays,
+  ClipboardList,
+  BellRing,
+} from "lucide-react";
+
 function LecturerDashboard() {
   const lectures = [
     {
@@ -57,23 +63,22 @@ function LecturerDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
 
           <DashboardCard
-            title="Upcoming Lectures"
-            value={lectures.length}
-            icon="📚"
-          />
+  title="Upcoming Lectures"
+  value={lectures.length}
+  icon={<CalendarDays size={32} />}
+/>
 
-          <DashboardCard
-            title="Pending Assignments"
-            value={assignments.length}
-            icon="📝"
-          />
+<DashboardCard
+  title="Pending Assignments"
+  value={assignments.length}
+  icon={<ClipboardList size={32} />}
+/>
 
-          <DashboardCard
-            title="Reminders"
-            value="3"
-            icon="🔔"
-          />
-
+<DashboardCard
+  title="Active Reminders"
+  value="3"
+  icon={<BellRing size={32} />}
+/>
         </div>
 
 
