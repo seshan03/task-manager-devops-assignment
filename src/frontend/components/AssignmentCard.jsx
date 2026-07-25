@@ -1,4 +1,12 @@
 function AssignmentCard({ assignment }) {
+  const moduleName =
+    assignment.moduleName ??
+    (assignment.module && typeof assignment.module === "object"
+      ? assignment.module.name
+      : assignment.module ?? "Unknown module");
+
+  const deadlineStr = assignment.deadline ?? "";
+
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
       <div className="flex justify-between">
@@ -12,14 +20,15 @@ function AssignmentCard({ assignment }) {
       </div>
 
       <p className="text-sm text-gray-500 mt-2">
-        Module: {assignment.module}
+        Module: {moduleName}
       </p>
 
       <p className="text-sm text-gray-600 mt-2">
-        Deadline: {assignment.deadline}
+        Deadline: {deadlineStr}
       </p>
     </div>
   );
 }
 
 export default AssignmentCard;
+
