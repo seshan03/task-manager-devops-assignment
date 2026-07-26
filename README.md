@@ -1,246 +1,74 @@
-# Task Manager DevOps Assignment
-
-> Advanced Git & DevOps Team Collaboration Assignment
+# Lecturer Teaching Companion System
 
 ## Project Overview
 
-This project is a collaborative Task Manager web application developed as part of the **Advanced Git & DevOps Team Collaboration Assignment**.
+The Lecturer Teaching Companion System is a full-stack application designed to help university lecturers manage their teaching activities, track lesson progress, record assignments promised to students, and receive reminders for upcoming lectures.
 
-The project demonstrates professional Git workflows, team collaboration, Continuous Integration (CI), Continuous Deployment (CD), and version control best practices.
+The system acts as a personal teaching assistant by helping lecturers maintain organized teaching records across different modules and student intakes.
 
----
+## Problem Being Solved
 
-# Team Members
+Lecturers often manage multiple modules, meetings, student project supervision tasks, and lecture schedules. This can lead to:
 
-| Name | Role |
-|------|------|
-| Dinith Jayasinghe ITBIN-2414-0001| DevOps Engineer |
-| Rashmika Prabod ITBIN-2414-0018| Full-Stack Developer |
+- Forgetting what was taught in previous lectures.
+- Forgetting planned assignments or promised tasks.
+- Losing track of upcoming lessons for different student intakes.
+- Difficulty maintaining consistent teaching records.
 
----
+This system provides a centralized platform to manage these responsibilities.
 
-# Project Objectives
+## Technology Stack
 
-- Develop a Task Manager web application
-- Collaborate using Git and GitHub
-- Follow a professional Git branching strategy
-- Implement Continuous Integration (CI)
-- Implement Continuous Deployment (CD)
-- Deploy the application online
+### Frontend
+- React.js
+- Vite
+- Tailwind CSS
 
----
+### Backend
+- Node.js
+- Express.js
 
-# Technologies Used
+### Database
+- MongoDB
 
-- HTML5
-- CSS3
-- JavaScript
+### Additional Services
+- JWT Authentication
+- Email Notifications
+- Scheduled Reminders
 
-*(Update this section if you use React or another framework.)*
+## Project Structure
+lecturer-teaching-companion/
 
-## DevOps
-
-- Git
-- GitHub
-- GitHub Actions
-- GitHub Pages *(or Vercel/Netlify if used)*
-
----
-
-# Repository Structure
-
-```text
-task-manager-devops-assignment/
+├── src/
+│ ├── frontend/
+│ └── backend/
 │
 ├── .github/
-│   └── workflows/
-│       ├── ci.yml
-│       └── deploy.yml
+│ └── workflows/
 │
-├── src/
-│
+├── AI_RULES.md
+├── AI_AGENT_SYSTEM_PROMPT.md
 ├── README.md
-├── .gitignore
-└── package.json (if applicable)
-```
+├── package.json
+└── .gitignore
 
----
 
-# Branch Strategy
+## Development Workflow
 
-This project follows a Git Flow workflow.
+The project follows a feature-based Git workflow:
 
-```
-main
-│
-└── develop
-     │
-     ├── feature/task-ui
-     ├── feature/login
-     └── feature/...
-```
+- `main` - Production branch
+- `develop` - Integration branch
+- `feature/*` - Individual feature development branches
 
-### Branch Purpose
-
-| Branch | Purpose |
-|---------|----------|
-| main | Production-ready code |
-| develop | Integration branch |
-| feature/* | New feature development |
-
----
-
-# Git Workflow
-
-1. Create a feature branch from `develop`
-2. Develop the feature
-3. Commit changes using Conventional Commits
-4. Push the feature branch
-5. Create a Pull Request
-6. Review the Pull Request
-7. Merge into `develop`
-8. Merge `develop` into `main`
-9. Automatically deploy the application
-
----
-
-# Conventional Commit Messages
-
-Examples:
-
-```
-feat: add task creation feature
-
-fix: resolve login validation bug
-
-docs: update README
-
-style: improve button styling
-
-refactor: optimize task logic
-
-test: add unit tests
-
-chore: configure GitHub Actions
-```
-
----
-
-# DevOps Responsibilities
-
-The DevOps Engineer is responsible for:
-
-- Repository setup
-- Branch management
-- Branch protection rules
-- GitHub Actions configuration
-- Continuous Integration (CI)
-- Continuous Deployment (CD)
-- Pull Request reviews
-- Deployment configuration
-
----
-
-# Full-Stack Developer Responsibilities
-
-The Full-Stack Developer is responsible for:
-
-- Building the Task Manager application
-- Implementing UI
-- Writing application logic
-- Fixing bugs
-- Creating feature branches
-- Submitting Pull Requests
-
----
-
-# Continuous Integration (CI)
-
-The CI pipeline will automatically:
-
-- Checkout repository
-- Install dependencies
-- Build the application
-- Run tests
-- Verify code quality
-
-Workflow:
-
-```
-.github/workflows/ci.yml
-```
-
-*(To be completed after the project setup.)*
-
----
-
-# Continuous Deployment (CD)
-
-The deployment pipeline will automatically deploy the application after successful merges into the `main` branch.
-
-Workflow:
-
-```
-.github/workflows/deploy.yml
-```
-
-Deployment Platform:
-
-- GitHub Pages *(or update if using another platform)*
-
----
-
-# Installation
-
-*(Complete this section after the application is created.)*
+All changes must follow conventional commit messages.
 
 Example:
-
-```bash
-git clone https://github.com/seshan03/task-manager-devops-assignment.git
-
-cd task-manager-devops-assignment
-
-npm install
-
-npm run dev
-```
-
----
-
-# Project Features
-
-*(Update after development is complete.)*
-
-Example:
-
-- Add tasks
-- Edit tasks
-- Delete tasks
-- Mark tasks as completed
-- Responsive design
-
----
-
-# Deployment
-
-Live Application:
-
-```
-Coming Soon
-```
-
----
-
-# Screenshots
-
-*(Add screenshots after the project is completed.)*
-
----
+eat: add lesson tracking feature
+fix: resolve reminder scheduling issue
+docs: update project documentation
 
 
-# Repository
+## Current Development Status
 
-GitHub Repository:
-
-https://github.com/seshan03/task-manager-devops-assignment
+Project foundation setup is in progress.
