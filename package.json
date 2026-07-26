@@ -20,6 +20,10 @@
   ],
   "author": "",
   "license": "ISC",
-  "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "concurrently": "^10.0.3",
+    "eslint": "^10.7.0",
+    "nodemon": "^3.1.14",
+    "vitest": "^4.1.10"
+  }
 }
