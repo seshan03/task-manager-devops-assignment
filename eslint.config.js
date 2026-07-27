@@ -12,11 +12,12 @@ export default [
           jsx: true,
         },
       },
-      globals: {
-        process: 'readonly',
-        console: 'readonly',
-        document: 'readonly',
-        window: 'readonly',
+     globals: {
+      process: 'readonly',
+      console: 'readonly',
+      document: 'readonly',
+      window: 'readonly',
+      fetch: 'readonly',
       },
     },
     rules: {},
