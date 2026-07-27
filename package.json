@@ -21,16 +21,19 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
     "@vitejs/plugin-react": "^6.0.4",
     "concurrently": "^10.0.3",
     "eslint": "^10.7.0",
     "nodemon": "^3.1.14",
+    "tailwindcss": "^4.3.3",
     "vite": "^8.1.5",
     "vitest": "^4.1.10"
   },
   "dependencies": {
     "cors": "^2.8.6",
     "express": "^5.2.1",
+    "lucide-react": "^1.26.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   }
