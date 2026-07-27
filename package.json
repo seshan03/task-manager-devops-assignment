@@ -8,7 +8,7 @@
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "nodemon src/backend/index.js",
     "client": "vite --config src/frontend/vite.config.js",
-    "build": "vite build",
+    "build": "vite build --config src/frontend/vite.config.js",
     "test": "vitest",
     "lint": "eslint . --ext .js,.jsx"
   },
@@ -21,6 +21,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@tailwindcss/vite": "^4.3.3",
     "@vitejs/plugin-react": "^6.0.4",
     "concurrently": "^10.0.3",
