@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Check, Pencil, Trash2 } from "lucide-react";
 
-function AssignmentCard({ assignment, onEdit, onDelete, onComplete, onRequestDelete }) {
-  const [deleting, setDeleting] = useState(false);
+function AssignmentCard({ assignment, onEdit, onComplete, onRequestDelete }) {
+  
   const [completing, setCompleting] = useState(false);
 
   const deadline = assignment.deadline
@@ -15,27 +15,6 @@ function AssignmentCard({ assignment, onEdit, onDelete, onComplete, onRequestDel
       ? assignment.module.name
       : assignment.module || "Unknown module";
 
-    async function handleDelete() {
-    setDeleting(true);
-
-    try {
-      const res = await fetch(
-        `/api/assignments/${assignment._id || assignment.id}`,
-        { method: "DELETE" }
-      );
-      const body = await res.json().catch(() => ({ __raw: "" }));
-
-      if (!res.ok || body.success === false) {
-        throw new Error(body.message || "Failed to delete");
-      }
-
-      if (onDelete) onDelete(assignment);
-    } catch (err) {
-      alert("Delete failed: " + (err.message || err));
-    } finally {
-      setDeleting(false);
-    }
-  }
   async function handleMarkAsDone() {
     setCompleting(true);
 
@@ -112,11 +91,10 @@ function AssignmentCard({ assignment, onEdit, onDelete, onComplete, onRequestDel
         <button
           type="button"
           onClick={() => onRequestDelete && onRequestDelete(assignment)}
-          disabled={deleting}
-          className="inline-flex items-center gap-1.5 rounded-md bg-gradient-to-r from-rose-600 to-pink-600 px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:from-rose-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-        >
+          className="inline-flex items-center gap-1.5 rounded-md bg-gradient-to-r from-rose-600 to-pink-600 px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:from-rose-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2"
+        >   
           <Trash2 size={16} aria-hidden="true" />
-          {deleting ? "Deleting..." : "Delete"}
+            Delete
         </button>
       </div>
 

@@ -17,6 +17,8 @@ export default [
       console: 'readonly',
       document: 'readonly',
       window: 'readonly',
+      alert: "readonly",
+      setTimeout: "readonly",
       fetch: 'readonly',
       },
     },
