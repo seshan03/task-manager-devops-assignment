@@ -26,7 +26,7 @@ function LecturerDashboard() {
   const [deleteAssignmentItem, setDeleteAssignmentItem] = useState(null);
   const [deleteLectureItem, setDeleteLectureItem] = useState(null);
 
-    function mapLecture(lecture) {
+function mapLecture(lecture) {
     return {
       _id: lecture._id || lecture.id,
       topic: lecture.topic || lecture.title || "",
@@ -45,6 +45,7 @@ function LecturerDashboard() {
         : lecture.time || "",
       status: lecture.status || "Pending",
     };
+  
   }
 
   function mapAssignment(assignment) {
