@@ -1,133 +1,172 @@
+import { useEffect, useState } from "react";
 import DashboardCard from "../components/DashboardCard";
 import LectureCard from "../components/LectureCard";
 import AssignmentCard from "../components/AssignmentCard";
 
 import {
-  CalendarDays,
-  ClipboardList,
-  BellRing,
+CalendarDays,
+ClipboardList,
+BellRing,
 } from "lucide-react";
 
 function LecturerDashboard() {
-  const lectures = [
-    {
-      id: 1,
-      module: "Database Systems",
-      topic: "Normalization and BCNF",
-      date: "Tomorrow",
-      time: "09:00 AM",
-    },
-    {
-      id: 2,
-      module: "Software Engineering",
-      topic: "Design Patterns",
-      date: "Friday",
-      time: "10:30 AM",
-    },
-  ];
+const [lectures, setLectures] = useState([]);
+const [assignments, setAssignments] = useState([]);
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState(null);
 
-  const assignments = [
-    {
-      id: 1,
-      title: "Database Assignment 2",
-      module: "Database Systems",
-      deadline: "01 August 2026",
-      status: "Pending",
-    },
-    {
-      id: 2,
-      title: "SE Group Project",
-      module: "Software Engineering",
-      deadline: "05 August 2026",
-      status: "Pending",
-    },
-  ];
+useEffect(() => {
+let mounted = true;
 
-  return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto">
+async function fetchData() {
+  setLoading(true);
+  setError(null);
 
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">
-            Lecturer Teaching Companion
-          </h1>
+  try {
+    const base = "http://localhost:5000";
+    const [lecRes, asgRes] = await Promise.all([
+      fetch(`${base}/api/lectures`),
+      fetch(`${base}/api/assignments`),
+    ]);
 
-          <p className="text-gray-500 mt-2">
-            Welcome back, here is your teaching overview.
-          </p>
-        </div>
+    if (!lecRes.ok) throw new Error(`Lectures fetch failed: ${lecRes.status}`);
+    if (!asgRes.ok) throw new Error(`Assignments fetch failed: ${asgRes.status}`);
 
+    const [lecsJson, asgsJson] = await Promise.all([
+      lecRes.json(),
+      asgRes.json(),
+    ]);
 
-        {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    if (!mounted) return;
 
-          <DashboardCard
-  title="Upcoming Lectures"
-  value={lectures.length}
-  icon={<CalendarDays size={32} />}
-/>
+    setLectures(Array.isArray(lecsJson?.data) ? lecsJson.data : []);
+    setAssignments(Array.isArray(asgsJson?.data) ? asgsJson.data : []);
+  } catch (err) {
+    console.error("Dashboard fetch error:", err);
+    if (mounted) setError(err.message || "Failed to load dashboard data");
+  } finally {
+    if (mounted) setLoading(false);
+  }
+}
 
-<DashboardCard
-  title="Pending Assignments"
-  value={assignments.length}
-  icon={<ClipboardList size={32} />}
-/>
+fetchData();
 
-<DashboardCard
-  title="Active Reminders"
-  value="3"
-  icon={<BellRing size={32} />}
-/>
-        </div>
+return () => {
+  mounted = false;
+};
 
+}, []);
 
-        {/* Lectures Section */}
-        <section className="mb-8">
+const lectureModuleName = (lecture) => {
+const m = lecture.module;
+if (!m) return "Unknown module";
+if (typeof m === "object") return m.name || m.title || "Unknown module";
+return String(m);
+};
 
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">
-            Upcoming Lectures
-          </h2>
+const formatDateTime = (iso) => {
+if (!iso) return "";
+try {
+const d = new Date(iso);
+if (Number.isNaN(d.getTime())) return iso;
+return d.toLocaleString();
+} catch {
+return iso;
+}
+};
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+return (
+<div className="min-h-screen bg-gray-50 p-6">
+<div className="max-w-7xl mx-auto">
+<div className="mb-8">
+<h1 className="text-3xl font-bold text-gray-800">
+Lecturer Teaching Companion
+</h1>
+<p className="text-gray-500 mt-2">
+Welcome back, here is your teaching overview.
+</p>
+</div>
 
-            {lectures.map((lecture) => (
-              <LectureCard
-                key={lecture.id}
-                lecture={lecture}
-              />
-            ))}
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <DashboardCard
+        title="Upcoming Lectures"
+        value={loading ? "…" : lectures.length}
+        icon={<CalendarDays size={32} />}
+      />
 
-          </div>
+      <DashboardCard
+        title="Pending Assignments"
+        value={loading ? "…" : assignments.length}
+        icon={<ClipboardList size={32} />}
+      />
 
-        </section>
-
-
-        {/* Assignment Section */}
-        <section>
-
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">
-            Assignment Promises
-          </h2>
-
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-
-            {assignments.map((assignment) => (
-              <AssignmentCard
-                key={assignment.id}
-                assignment={assignment}
-              />
-            ))}
-
-          </div>
-
-        </section>
-
-
-      </div>
+      <DashboardCard
+        title="Active Reminders"
+        value={loading ? "…" : "3"}
+        icon={<BellRing size={32} />}
+      />
     </div>
-  );
+
+    {loading && (
+      <div className="text-gray-600 mb-6">Loading dashboard data…</div>
+    )}
+
+    {error && (
+      <div className="text-red-600 mb-6">Error: {error}</div>
+    )}
+
+    <section className="mb-8">
+      <h2 className="text-xl font-semibold text-gray-800 mb-4">
+        Upcoming Lectures
+      </h2>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        {lectures.length === 0 && !loading && (
+          <div className="text-gray-500">No upcoming lectures found.</div>
+        )}
+
+        {lectures.map((lecture) => (
+          <LectureCard
+            key={lecture._id || lecture.id}
+            lecture={{
+              ...lecture,
+              moduleName: lectureModuleName(lecture),
+              date: formatDateTime(lecture.dateTime || lecture.date),
+            }}
+          />
+        ))}
+      </div>
+    </section>
+
+    <section>
+      <h2 className="text-xl font-semibold text-gray-800 mb-4">
+        Assignment Promises
+      </h2>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        {assignments.length === 0 && !loading && (
+          <div className="text-gray-500">No assignments found.</div>
+        )}
+
+        {assignments.map((assignment) => (
+          <AssignmentCard
+            key={assignment._id || assignment.id}
+            assignment={{
+              ...assignment,
+              moduleName:
+                assignment.module?.name ||
+                assignment.module ||
+                "Unknown module",
+              deadline: formatDateTime(assignment.deadline || assignment.dueDate),
+            }}
+          />
+        ))}
+      </div>
+    </section>
+  </div>
+</div>
+
+);
 }
 
 export default LecturerDashboard;
