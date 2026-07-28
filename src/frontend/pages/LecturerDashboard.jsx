@@ -10,7 +10,6 @@ BellRing,
 } from "lucide-react";
 
 function LecturerDashboard() {
-const [modules, setModules] = useState([]);
 const [lectures, setLectures] = useState([]);
 const [assignments, setAssignments] = useState([]);
 const [loading, setLoading] = useState(true);
@@ -25,25 +24,21 @@ async function fetchData() {
 
   try {
     const base = "http://localhost:5000";
-    const [modRes, lecRes, asgRes] = await Promise.all([
-      fetch(`${base}/api/modules`),
+    const [lecRes, asgRes] = await Promise.all([
       fetch(`${base}/api/lectures`),
       fetch(`${base}/api/assignments`),
     ]);
 
-    if (!modRes.ok) throw new Error(`Modules fetch failed: ${modRes.status}`);
     if (!lecRes.ok) throw new Error(`Lectures fetch failed: ${lecRes.status}`);
     if (!asgRes.ok) throw new Error(`Assignments fetch failed: ${asgRes.status}`);
 
-    const [modsJson, lecsJson, asgsJson] = await Promise.all([
-      modRes.json(),
+    const [lecsJson, asgsJson] = await Promise.all([
       lecRes.json(),
       asgRes.json(),
     ]);
 
     if (!mounted) return;
 
-    setModules(Array.isArray(modsJson?.data) ? modsJson.data : []);
     setLectures(Array.isArray(lecsJson?.data) ? lecsJson.data : []);
     setAssignments(Array.isArray(asgsJson?.data) ? asgsJson.data : []);
   } catch (err) {
