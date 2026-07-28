@@ -23,7 +23,7 @@ async function fetchData() {
   setError(null);
 
   try {
-    const base = "http://localhost:5000";
+   const base = "";
     const [lecRes, asgRes] = await Promise.all([
       fetch(`${base}/api/lectures`),
       fetch(`${base}/api/assignments`),

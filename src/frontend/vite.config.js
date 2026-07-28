@@ -8,4 +8,8 @@ export default defineConfig({
     tailwindcss(),
   ],
   root: "./src/frontend",
+  build: {
+    outDir: "../../dist",
+    emptyOutDir: true,
+  },
 });
