@@ -4,7 +4,8 @@ import Module from '../models/Module.js';
 
 export const getLectures = async (req, res) => {
   try {
-    const lectures = await Lecture.find()
+    const query = req.user.role === "admin" ? {} : { createdBy: req.user.id };
+    const lectures = await Lecture.find(query)
       .populate("module", "name code intake")
       .sort({ dateTime: 1 });
     return res.json({ success: true, data: lectures });
@@ -29,8 +30,17 @@ export const createLecture = async (req, res) => {
   }
 
   try {
+    const existingModule = await Module.findById(module);
+    if (!existingModule) {
+      return res.status(400).json({ success: false, message: "Module not found" });
+    }
+    if (req.user.role !== "admin" && existingModule.createdBy.toString() !== req.user.id) {
+      return res.status(403).json({ success: false, message: "Forbidden" });
+    }
+
     const lecture = await Lecture.create({
       module,
+      createdBy: req.user.id,
       topic,
       dateTime: parsedDate,
       notes,
@@ -52,6 +62,11 @@ export const getLectureById = async (req, res) => {
   try {
     const lecture = await Lecture.findById(id).populate('module', 'name code intake');
     if (!lecture) return res.status(404).json({ success: false, message: 'Lecture not found' });
+
+    if (req.user.role !== "admin" && lecture.createdBy.toString() !== req.user.id) {
+      return res.status(403).json({ success: false, message: "Forbidden" });
+    }
+
     return res.json({ success: true, data: lecture });
   } catch (err) {
     console.error('getLectureById error', err);
@@ -59,7 +74,6 @@ export const getLectureById = async (req, res) => {
   }
 };
 
-// PUT /api/lectures/:id
 export const updateLecture = async (req, res) => {
   const { id } = req.params;
   const { module: moduleId, topic, dateTime, status, notes } = req.body;
@@ -72,9 +86,19 @@ export const updateLecture = async (req, res) => {
   }
 
   try {
+    const lecture = await Lecture.findById(id);
+    if (!lecture) return res.status(404).json({ success: false, message: 'Lecture not found' });
+
+    if (req.user.role !== "admin" && lecture.createdBy.toString() !== req.user.id) {
+      return res.status(403).json({ success: false, message: 'Forbidden' });
+    }
+
     if (moduleId) {
       const m = await Module.findById(moduleId);
       if (!m) return res.status(400).json({ success: false, message: 'Module not found' });
+      if (req.user.role !== "admin" && m.createdBy.toString() !== req.user.id) {
+        return res.status(403).json({ success: false, message: 'Forbidden' });
+      }
     }
 
     const updated = await Lecture.findByIdAndUpdate(
@@ -91,15 +115,21 @@ export const updateLecture = async (req, res) => {
   }
 };
 
-// DELETE /api/lectures/:id
 export const deleteLecture = async (req, res) => {
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ success: false, message: 'Invalid lecture id' });
   }
+
   try {
+    const lecture = await Lecture.findById(id);
+    if (!lecture) return res.status(404).json({ success: false, message: 'Lecture not found' });
+
+    if (req.user.role !== "admin" && lecture.createdBy.toString() !== req.user.id) {
+      return res.status(403).json({ success: false, message: 'Forbidden' });
+    }
+
     const removed = await Lecture.findByIdAndDelete(id);
-    if (!removed) return res.status(404).json({ success: false, message: 'Lecture not found' });
     return res.json({ success: true, data: removed });
   } catch (err) {
     console.error('deleteLecture error', err);

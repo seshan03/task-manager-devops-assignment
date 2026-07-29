@@ -5,7 +5,8 @@ import Lecture from '../models/Lecture.js';
 
 export const getAssignments = async (req, res) => {
   try {
-    const assignments = await Assignment.find()
+    const query = req.user.role === "admin" ? {} : { createdBy: req.user.id };
+    const assignments = await Assignment.find(query)
       .populate("module", "name code intake")
       .populate("lecture", "topic dateTime")
       .sort({ deadline: 1 });
@@ -34,10 +35,25 @@ export const createAssignment = async (req, res) => {
   }
 
   try {
+    const moduleDoc = await Module.findById(module);
+    if (!moduleDoc) return res.status(400).json({ success: false, message: "Module not found" });
+    if (req.user.role !== "admin" && moduleDoc.createdBy.toString() !== req.user.id) {
+      return res.status(403).json({ success: false, message: "Forbidden" });
+    }
+
+    if (lecture) {
+      const lectureDoc = await Lecture.findById(lecture);
+      if (!lectureDoc) return res.status(400).json({ success: false, message: "Lecture not found" });
+      if (req.user.role !== "admin" && lectureDoc.createdBy.toString() !== req.user.id) {
+        return res.status(403).json({ success: false, message: "Forbidden" });
+      }
+    }
+
     const assignment = await Assignment.create({
       title,
       module,
       lecture,
+      createdBy: req.user.id,
       deadline: parsedDeadline,
       details,
     });
@@ -48,7 +64,6 @@ export const createAssignment = async (req, res) => {
   }
 };
 
-// GET /api/assignments/:id
 export const getAssignmentById = async (req, res) => {
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -59,6 +74,11 @@ export const getAssignmentById = async (req, res) => {
       .populate('module', 'name code intake')
       .populate('lecture', 'topic dateTime');
     if (!assignment) return res.status(404).json({ success: false, message: 'Assignment not found' });
+
+    if (req.user.role !== "admin" && assignment.createdBy.toString() !== req.user.id) {
+      return res.status(403).json({ success: false, message: 'Forbidden' });
+    }
+
     return res.json({ success: true, data: assignment });
   } catch (err) {
     console.error('getAssignmentById error', err);
@@ -66,7 +86,6 @@ export const getAssignmentById = async (req, res) => {
   }
 };
 
-// PUT /api/assignments/:id
 export const updateAssignment = async (req, res) => {
   const { id } = req.params;
   const { title, module: moduleId, lecture: lectureId, deadline, status, details } = req.body;
@@ -82,13 +101,27 @@ export const updateAssignment = async (req, res) => {
   }
 
   try {
+    const assignment = await Assignment.findById(id);
+    if (!assignment) return res.status(404).json({ success: false, message: 'Assignment not found' });
+
+    if (req.user.role !== "admin" && assignment.createdBy.toString() !== req.user.id) {
+      return res.status(403).json({ success: false, message: 'Forbidden' });
+    }
+
     if (moduleId) {
       const m = await Module.findById(moduleId);
       if (!m) return res.status(400).json({ success: false, message: 'Module not found' });
+      if (req.user.role !== "admin" && m.createdBy.toString() !== req.user.id) {
+        return res.status(403).json({ success: false, message: 'Forbidden' });
+      }
     }
+
     if (lectureId) {
       const l = await Lecture.findById(lectureId);
       if (!l) return res.status(400).json({ success: false, message: 'Lecture not found' });
+      if (req.user.role !== "admin" && l.createdBy.toString() !== req.user.id) {
+        return res.status(403).json({ success: false, message: 'Forbidden' });
+      }
     }
 
     const setObj = {
@@ -116,15 +149,20 @@ export const updateAssignment = async (req, res) => {
   }
 };
 
-// DELETE /api/assignments/:id
 export const deleteAssignment = async (req, res) => {
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ success: false, message: 'Invalid assignment id' });
   }
   try {
+    const assignment = await Assignment.findById(id);
+    if (!assignment) return res.status(404).json({ success: false, message: 'Assignment not found' });
+
+    if (req.user.role !== "admin" && assignment.createdBy.toString() !== req.user.id) {
+      return res.status(403).json({ success: false, message: 'Forbidden' });
+    }
+
     const removed = await Assignment.findByIdAndDelete(id);
-    if (!removed) return res.status(404).json({ success: false, message: 'Assignment not found' });
     return res.json({ success: true, data: removed });
   } catch (err) {
     console.error('deleteAssignment error', err);
