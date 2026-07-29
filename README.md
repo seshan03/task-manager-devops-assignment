@@ -113,6 +113,7 @@ During development, the team faced several collaboration and configuration chall
 - ESLint issues caused by unused variables and browser API definitions were identified and fixed.
 - The initial Vercel deployment returned a 404 because the production branch (`main`) had not yet been merged with the Vercel-ready configuration on `develop`; this was resolved by completing the `develop` → `main` merge, after which the deployment went live successfully.
 - Team collaboration was maintained through feature branches, pull requests, code reviews, and structured Git workflow practices.
+- The live deployment was manually verified in an incognito browser session to confirm the application loads correctly without cached data and functions as expected for an end user.
 
 ## Build Status
 
