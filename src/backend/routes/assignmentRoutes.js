@@ -6,8 +6,10 @@ import {
   updateAssignment,
   deleteAssignment,
 } from "../controllers/assignmentController.js";
+import { authenticate } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
+router.use(authenticate);
 
 router.get("/", getAssignments);
 router.post("/", createAssignment);

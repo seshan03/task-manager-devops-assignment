@@ -12,16 +12,19 @@ export default [
           jsx: true,
         },
       },
-     globals: {
-      process: 'readonly',
-      console: 'readonly',
-      document: 'readonly',
-      window: 'readonly',
-      alert: "readonly",
-      setTimeout: "readonly",
-      fetch: 'readonly',
+      globals: {
+        process: 'readonly',
+        console: 'readonly',
+        document: 'readonly',
+        window: 'readonly',
+        alert: 'readonly',
+        setTimeout: 'readonly',
+        fetch: 'readonly',
       },
     },
     rules: {},
+  },
+  {
+    ignores: ['src/frontend/dist/**'],
   },
 ];

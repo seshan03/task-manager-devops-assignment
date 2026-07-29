@@ -6,6 +6,11 @@ const moduleSchema = new mongoose.Schema(
     code: { type: String, trim: true },
     intake: { type: String, trim: true },
     description: { type: String, trim: true },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
   { timestamps: true }
 );

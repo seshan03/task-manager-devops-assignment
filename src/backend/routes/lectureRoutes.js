@@ -6,8 +6,10 @@ import {
   updateLecture,
   deleteLecture,
 } from "../controllers/lectureController.js";
+import { authenticate } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
+router.use(authenticate);
 
 router.get("/", getLectures);
 router.post("/", createLecture);
