@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Pencil, Trash2, Check } from "lucide-react";
+import { fetchWithAuth } from "../services/api";
 
 function LectureCard({ lecture, onEdit, onComplete, onRequestDelete }) {
 
@@ -19,11 +20,11 @@ function LectureCard({ lecture, onEdit, onComplete, onRequestDelete }) {
   setCompleting(true);
 
     try {
-      const res = await fetch(`/api/lectures/${lecture._id || lecture.id}`, {
+      const res = await fetchWithAuth(`/api/lectures/${lecture._id || lecture.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: "Completed" }),
-    });
+      });
 
     const body = await res.json().catch(() => ({ __raw: "" }));
 
