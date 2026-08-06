@@ -17,6 +17,7 @@ export default [
         console: 'readonly',
         document: 'readonly',
         window: 'readonly',
+        localStorage: "readonly",
         alert: 'readonly',
         setTimeout: 'readonly',
         fetch: 'readonly',

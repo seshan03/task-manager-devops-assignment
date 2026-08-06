@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Check, Pencil, Trash2 } from "lucide-react";
+import { fetchWithAuth } from "../services/api";
 
 function AssignmentCard({ assignment, onEdit, onComplete, onRequestDelete }) {
   
@@ -19,14 +20,11 @@ function AssignmentCard({ assignment, onEdit, onComplete, onRequestDelete }) {
     setCompleting(true);
 
     try {
-      const response = await fetch(
-        `/api/assignments/${assignment._id || assignment.id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ status: "Completed" }),
-        }
-      );
+      const response = await fetchWithAuth(`/api/assignments/${assignment._id || assignment.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "Completed" }),
+      });
 
       const body = await response.json().catch(() => ({ __raw: "" }));
 

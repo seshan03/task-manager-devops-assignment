@@ -6,6 +6,9 @@ import AssignmentForm from "../components/AssignmentForm";
 import AssignmentEditForm from "../components/AssignmentEditForm";
 import LectureForm from "../components/LectureForm";
 
+import { fetchWithAuth } from "../services/api";
+import { useAuth } from "../context/AuthContext";
+
 import {
   CalendarDays,
   ClipboardList,
@@ -13,6 +16,7 @@ import {
 } from "lucide-react";
 
 function LecturerDashboard() {
+  const { logout } = useAuth();
   const [lectures, setLectures] = useState([]);
   const [assignments, setAssignments] = useState([]);
   const [modules, setModules] = useState([]);
@@ -61,9 +65,9 @@ function mapLecture(lecture) {
 
     try {
       const [modsRes, lectRes, asgRes] = await Promise.all([
-        fetch("/api/modules"),
-        fetch("/api/lectures"),
-        fetch("/api/assignments"),
+        fetchWithAuth("/api/modules"),
+        fetchWithAuth("/api/lectures"),
+        fetchWithAuth("/api/assignments"),
       ]);
 
       const mods = await modsRes.json();
@@ -84,7 +88,7 @@ function mapLecture(lecture) {
 
   async function fetchLectures() {
     try {
-      const lectRes = await fetch("/api/lectures");
+      const lectRes = await fetchWithAuth("/api/lectures");
       const lects = await lectRes.json();
       setLectures(Array.isArray(lects?.data) ? lects.data.map(mapLecture) : []);
     } catch (err) {
@@ -156,20 +160,36 @@ function mapLecture(lecture) {
 
   async function confirmAssignmentDelete() {
     if (!deleteAssignmentItem) return;
-    await fetch(`/api/assignments/${deleteAssignmentItem._id || deleteAssignmentItem.id}`, {
-      method: "DELETE",
-    });
-    setDeleteAssignmentItem(null);
-    fetchData();
+    try {
+      const res = await fetchWithAuth(`/api/assignments/${deleteAssignmentItem._id || deleteAssignmentItem.id}`, {
+        method: "DELETE",
+      });
+      const body = await res.json().catch(() => ({ __raw: "" }));
+      if (!res.ok || body.success === false) {
+        throw new Error(body.message || "Failed to delete assignment");
+      }
+      setDeleteAssignmentItem(null);
+      fetchData();
+    } catch (err) {
+      alert("Unable to delete assignment: " + (err.message || err));
+    }
   }
 
   async function confirmLectureDelete() {
     if (!deleteLectureItem) return;
-    await fetch(`/api/lectures/${deleteLectureItem._id || deleteLectureItem.id}`, {
-      method: "DELETE",
-    });
-    setDeleteLectureItem(null);
-    fetchData();
+    try {
+      const res = await fetchWithAuth(`/api/lectures/${deleteLectureItem._id || deleteLectureItem.id}`, {
+        method: "DELETE",
+      });
+      const body = await res.json().catch(() => ({ __raw: "" }));
+      if (!res.ok || body.success === false) {
+        throw new Error(body.message || "Failed to delete lecture");
+      }
+      setDeleteLectureItem(null);
+      fetchData();
+    } catch (err) {
+      alert("Unable to delete lecture: " + (err.message || err));
+    }
   }
 
   function closeAssignmentEdit() {
@@ -184,12 +204,23 @@ function mapLecture(lecture) {
         <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-6 text-slate-900">
       <div className="max-w-7xl mx-auto">
                 <div className="mb-8 rounded-3xl border border-white/70 bg-white/65 p-6 shadow-lg backdrop-blur-md">
-                    <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
-            Lecturer Teaching Companion
-          </h1>
-                    <p className="mt-2 text-sm text-slate-600">
-            Welcome back, here is your teaching overview.
-          </p>
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
+                Lecturer Teaching Companion
+              </h1>
+              <p className="mt-2 text-sm text-slate-600">
+                Welcome back, here is your teaching overview.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={logout}
+              className="inline-flex items-center rounded-lg bg-rose-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2"
+            >
+              Logout
+            </button>
+          </div>
         </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 text-slate-900">

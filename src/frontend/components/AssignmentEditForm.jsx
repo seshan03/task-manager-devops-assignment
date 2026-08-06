@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { fetchWithAuth } from "../services/api";
 
 function AssignmentEditForm({
   assignment = {},
@@ -53,7 +54,7 @@ function AssignmentEditForm({
       intake: intakeValue?.trim() || undefined,
     };
 
-    const res = await fetch("/api/modules", {
+    const res = await fetchWithAuth("/api/modules", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -87,7 +88,7 @@ function AssignmentEditForm({
         details: details.trim() || undefined,
       };
 
-      const res = await fetch(
+      const res = await fetchWithAuth(
         `/api/assignments/${assignment._id || assignment.id}`,
         {
           method: "PUT",

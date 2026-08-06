@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { fetchWithAuth } from "../services/api";
 
 function AssignmentForm({ modules = [], onCreated, onCancel }) {
   const [title, setTitle] = useState("");
@@ -34,7 +35,7 @@ function AssignmentForm({ modules = [], onCreated, onCancel }) {
       intake: intakeValue?.trim() || undefined,
     };
 
-    const res = await fetch("/api/modules", {
+    const res = await fetchWithAuth("/api/modules", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -69,7 +70,7 @@ function AssignmentForm({ modules = [], onCreated, onCancel }) {
         details: details.trim() || undefined,
       };
 
-      const res = await fetch("/api/assignments", {
+      const res = await fetchWithAuth("/api/assignments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

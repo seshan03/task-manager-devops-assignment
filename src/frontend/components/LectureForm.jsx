@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { fetchWithAuth } from "../services/api";
 
 function LectureForm({ modules = [], lectureId, onSuccess, onCancel }) {
   const [moduleName, setModuleName] = useState("");
@@ -39,7 +40,7 @@ function LectureForm({ modules = [], lectureId, onSuccess, onCancel }) {
 
   async function fetchExistingLecture(id) {
     try {
-      const res = await fetch(`/api/lectures/${id}`);
+      const res = await fetchWithAuth(`/api/lectures/${id}`);
       const body = await safeJson(res);
 
       if (res.ok && body.data) {
@@ -62,7 +63,7 @@ function LectureForm({ modules = [], lectureId, onSuccess, onCancel }) {
     const existing = findModuleByName(name);
     if (existing) return existing._id || existing.id;
 
-    const res = await fetch("/api/modules", {
+    const res = await fetchWithAuth("/api/modules", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name: name.trim() }),
@@ -101,7 +102,7 @@ function LectureForm({ modules = [], lectureId, onSuccess, onCancel }) {
         : "/api/lectures";
       const method = isEditMode ? "PUT" : "POST";
 
-      const res = await fetch(endpoint, {
+      const res = await fetchWithAuth(endpoint, {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
